@@ -1,0 +1,68 @@
+﻿
+@{
+    ViewBag.Title = "MyPlaylists";
+    Layout = "~/Views/Shared/_Layout_User.cshtml";
+}
+
+<h2>My Playlists</h2>
+
+<form class="form-inline">
+    <div class="form-group">
+        <input class="form-control" id="pl_name" type="text" placeholder="Playlist name..">
+    </div>
+    <button type="submit" class="btn btn-default" onclick="pl_add()">Create</button>
+</form>
+
+<script>
+    function pl_add()
+    {
+        pn = $("#pl_name").val()
+        $.ajax({
+            url: "CreateNewPL",
+            method: "POST",
+            data: { P_name: pn }
+        })
+    }
+</script>
+
+</br>
+
+<table class="table table-hover table-responsive">
+    <thead>
+        <tr>
+            <th>Playlist name</th>
+            <th>No. of Songs</th>
+            <th>Delete Playlist</th>
+        </tr>
+    </thead>
+    <tbody id="pld_bdy"></tbody>
+</table>
+
+<script>
+    $(document).ready(
+        $.ajax({
+            url: "GetPlaylists",
+            method: "GET",
+            success: function (data) {
+                temp1 = data;
+
+                st = "";
+                for (i = 0; i < temp1.length; i++) {
+                    //get no of songs
+                    var res = temp1[i]["Sid_arr"].split(" ");
+                    sarr = res.filter(v => v != '');
+                    
+                    st += "<tr>"
+                    st += "<td><a href='Playlistinfo?id=" + temp1[i]["Id"] + "'>" + temp1[i]["P_name"] + "</a></td>"
+                    st += "<td>" + sarr.length +"</td>"
+                    st += "<td><a href='DeletePL?id=" + temp1[i]["Id"] + "'>Delete</a></td>"
+                    st += "</tr>"
+                }
+                $("#pld_bdy").html(st);
+            },
+            error: function (err) {
+                console.error(err);
+            }
+        })
+    );
+</script>

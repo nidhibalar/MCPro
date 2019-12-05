@@ -1,0 +1,191 @@
+﻿@model MCProj.Models.SongsModel
+
+@{
+    ViewBag.Title = "Song";
+    Layout = "~/Views/Shared/_Layout_User.cshtml";
+}
+
+<h2>Song - @Html.DisplayFor(model => model.S_name)</h2>
+
+<div>
+
+    <hr />
+
+    <div class="row">
+        <div class="col-xs-4">
+            <a href="#" class="thumbnail">
+                @{
+                    var link = Model.Song_link;
+                    String[] id = link.Split('=');
+
+                    if (id.Length > 1)
+                    {
+                        link = "https://img.youtube.com/vi/" + id[1] + "/0.jpg";
+                    }
+                }
+                <img src="@link">
+            </a>
+        </div>
+
+        <div class="col-xs-8">
+            <dl class="dl-horizontal">
+                <dt>
+                    @Html.DisplayNameFor(model => model.S_name)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.S_name)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.R_date)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.R_date)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Art_name)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Art_name)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Genre)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Genre)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Album_name)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Album_name)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Song_link)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Song_link)
+                </dd>
+
+                <dt>
+                    Add to Playlist
+                </dt>
+
+                <dd>
+
+                    <button class="btn btn-default" id="p_btn">Show Playlists</button>
+
+                    <br />
+
+                    <span id="pl" style="display:none">
+                    </span>
+
+                    <script>
+                        //Show hide btn
+                        $(document).ready(function () {
+                            $("#p_btn").click(function () {
+                                if ($("#p_btn").html() == "Show Playlists")
+                                {
+                                    $("#pl").css('display', 'block');
+                                    $("#p_btn").html("Hide Playlists");
+                                }
+                                else if ($("#p_btn").html() == "Hide Playlists")
+                                {
+                                    $("#pl").css('display', 'none');
+                                    $("#p_btn").html("Show Playlists");
+                                }
+                            });
+                        });
+                    </script>
+
+                    <script>
+                        //Get Playlists
+                        $(document).ready(
+                            $.ajax({
+                                url: "GetPlaylists",
+                                method: "GET",
+                                success: function (data) {
+                                    temp1 = data//JSON.parse(data);
+
+                                    st = "";
+                                    for (i = 0; i < temp1.length; i++) {
+                                        st += "<label>"
+
+                                        var sarr = temp1[i]["Sid_arr"].split(" ");
+
+                                        if (sarr.includes("@Html.DisplayFor(model => model.Id)")) {
+                                            st += "<input type='checkbox' onClick='c_click(this.id," + @Html.DisplayFor(model => model.Id) + ")' checked id='" + temp1[i]["Id"] + "'>" + temp1[i]["P_name"];
+                                        }
+                                        else {
+                                            st += "<input type='checkbox' onClick='c_click(this.id," + @Html.DisplayFor(model => model.Id) + ")' id='" + temp1[i]["Id"] + "'>" + temp1[i]["P_name"];
+                                        }
+
+                                        st += "</label></br>"
+                                    }
+                                    $("#pl").html(st);
+                                },
+                                error: function (err) {
+                                    console.error(err);
+                                }
+                            })
+                        );
+
+                        //Record Check in DB
+                        function c_click(pid, id) {
+                            if (document.getElementById(pid).checked) {
+                                //alert('Checked');
+                                //alert(pid);
+                                $.ajax({
+                                    url: "AddPL",
+                                    method: "POST",
+                                    data: { pid:pid, sid:id }
+                                })
+                            }
+                            else if (document.getElementById(pid).checked==false){
+                                //alert('Unchecked');
+                                //alert(pid);
+                                $.ajax({
+                                    url: "RemovePL",
+                                    method: "POST",
+                                    data: { pid:pid, sid:id }
+                                })
+                            }
+                        };
+                    </script>
+
+                </dd>
+
+            </dl>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="embed-responsive embed-responsive-16by9">
+                @{
+                    var eLink = " ";
+                    if(id.Length > 1)
+                    {
+                        eLink = "https://www.youtube.com/embed/" + id[1] + "/0.jpg";
+                    }
+                }
+                <iframe class="embed-responsive-item" src=@eLink></iframe>
+            </div>
+        </div>
+    </div>
+
+</div>
+<p>
+    <br />
+    @Html.ActionLink("Back to Song List", "BrowseSongs")
+</p>

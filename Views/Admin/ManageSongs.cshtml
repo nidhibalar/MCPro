@@ -1,0 +1,64 @@
+﻿
+@{
+    ViewBag.Title = "ManageSongs";
+    Layout = "~/Views/Shared/_Layout_Admin.cshtml";
+}
+
+<h2>Manage Songs</h2>
+
+<input class="form-control" id="searchIn" type="text" placeholder="Search..">
+
+<br />
+
+<table class="table table-hover table-responsive">
+    <thead>
+        <tr>
+            <th>Song Name</th>
+            <th>Release Date</th>
+            <th>Artist Name</th>
+            <th>Genre</th>
+            <th>Album Name</th>
+            <th>Edit</th>
+            <th>Delete</th>
+        </tr>
+    </thead>
+    <tbody id="st_bdy"></tbody>
+</table>
+
+<script>
+    $(document).ready(
+        $.ajax({
+            url: "GetSongs",
+            method: "GET",
+            success: function (data) {
+                temp1 = JSON.parse(data);
+
+                st = "";
+                for (i = 0; i < temp1.length; i++) {
+                    rel_date = new Date(temp1[i]["R_date"])
+                    rel_date = rel_date.getDate() + "-" + (rel_date.getMonth() + 1) + "-" + rel_date.getFullYear()
+
+                    st += "<tr>"
+                    st += "<td>" + temp1[i]["S_name"] + "</td><td>" + rel_date + "</td><td>" + temp1[i]["Art_name"] + "</td><td>" + temp1[i]["Genre"] + "</td><td>" + temp1[i]["Album_name"] + "</td><td><a href='EditSong?id=" + temp1[i]["Id"] + "'>Edit</a></td><td><a href='DeleteSong/" + temp1[i]["Id"] + "'>Delete</a></td>"
+                    st += "</tr>"
+                }
+                $("#st_bdy").html(st);
+            },
+            error: function (err) {
+                console.error(err);
+            }
+        })
+    );
+</script>
+
+<script>
+    $(document).ready(function () {
+        $("#searchIn").on("keyup", function () {
+            var value = $(this).val().toLowerCase();
+            $("#st_bdy tr").filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+    });
+</script>
+

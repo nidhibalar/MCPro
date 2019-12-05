@@ -1,0 +1,62 @@
+﻿@model MCProj.Models.PlaylistsModel
+@using MCPro.DB.DbOperations;
+@{
+    ViewBag.Title = "PlaylistInfo";
+    Layout = "~/Views/Shared/_Layout_User.cshtml";
+}
+
+<h2>Playlist - @Html.DisplayFor(model => model.P_name)</h2>
+<h4>Created on - @Html.DisplayFor(model => model.Date)</h4>
+
+<br />
+
+<table class="table table-hover table-responsive" id="tb">
+    <thead>
+        <tr>
+            <th>Song Name</th>
+            <th>Artist Name</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            var sd = "";
+
+            SongsRepo sr = new SongsRepo();
+
+            if (Model.Sid_arr!=string.Empty)
+            {
+                var temp = Model.Sid_arr.Split(' ');
+                for (int i = 0; i < temp.Length; i++)
+                {
+                    if (temp[i]!=string.Empty)
+                    {
+                        var x = sr.GetSong(int.Parse(temp[i]));
+                        //sd += "<tr><td>" + x.S_name + "</td></tr>";
+                        sd += "<tr><td><a href='Song?id=" + x.Id + "'>" + x.S_name + "</a></td><td>" + x.Art_name + "</td></tr>";
+                    }
+                }
+            }
+            else
+            {
+                sd = "<script> $('#tb').html('<h3>Empty Playlist.</h3>'); </script>";
+            }
+        }
+        @Html.Raw(sd)
+        </tbody>
+    </table>
+
+<div class="dropdown">
+    <button class="btn btn-block dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <span class="glyphicon glyphicon-send">
+        </span> Share playlist <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+        <li><a href="https://www.facebook.com/sharer/sharer.php?u=@Request.Url.AbsoluteUri">Facebook</a></li>
+        <li><a href="https://twitter.com/home?status=@Request.Url.AbsoluteUri">Twitter</a></li>
+        <li><a href="https://pinterest.com/pin/create/button/?url=@Request.Url.AbsoluteUri&media=&description=">Pinterest</a></li>
+        <li><a href="https://www.linkedin.com/shareArticle?mini=true&url=@Request.Url.AbsoluteUri&title=&summary=&source=">Linkedin</a></li>
+        <li><a href="mailto:info@example.com?&subject=&body=@Request.Url.AbsoluteUri">E-Mail</a></li>
+    </ul>
+</div>
+
+

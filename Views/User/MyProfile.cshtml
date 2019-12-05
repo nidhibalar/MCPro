@@ -1,0 +1,102 @@
+﻿@model MCProj.Models.UsersModel
+
+@{
+    ViewBag.Title = "MyProfile";
+    Layout = "~/Views/Shared/_Layout_User.cshtml";
+}
+
+<h2>My Profile</h2>
+
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Fname)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Fname)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Lname)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Lname)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Email)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Email)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Pwd)
+        </dt>
+
+        <dd>
+            <span id="pwd">@Html.DisplayFor(model => model.Pwd)</span>
+            &nbsp;
+            <button type="button" id="eye"><span class="glyphicon glyphicon-eye-open"></span></button>
+            &nbsp;
+
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#editPwdModel">Edit</button>
+
+            <div class="modal fade" tabindex="-1" role="dialog" id="editPwdModel">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title">Change Password</h4>
+                        </div>
+                        <div class="modal-body">
+                            <input type="text" class="form-control" placeholder="Password" value="@Html.DisplayFor(model => model.Pwd)" id="pwd_tb">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary" onclick="up()">Save changes</button>
+                        </div>
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
+            </div><!-- /.modal -->
+            </dl>
+    </div>
+<p>
+    @Html.ActionLink("Back to List", "Index")
+</p>
+
+<script>
+    //Show hide pwd
+    $(document).ready(function () {
+
+        var rp = $("#pwd").html()
+        $("#pwd").html('*******')
+        $("#eye").click(function ()
+        {
+            if ($("#eye").html() == '<span class="glyphicon glyphicon-eye-open"></span>')
+            {
+                $("#eye").html('<span class="glyphicon glyphicon-eye-close"></span>')
+                $("#pwd").html('*******')
+            }
+            else if ($("#eye").html() == '<span class="glyphicon glyphicon-eye-close"></span>')
+            {
+                $("#eye").html('<span class="glyphicon glyphicon-eye-open"></span>')
+                $("#pwd").html(rp)
+            }
+        });
+    });
+
+    function up()
+    {
+        $.ajax({
+            url: "UpdatePassword",
+            method: "POST",
+                data: { id: "@Html.DisplayFor(model => model.Email)", pwd: $("#pwd_tb").val()}
+        })
+        location.reload();
+    }
+</script>

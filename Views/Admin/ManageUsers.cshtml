@@ -1,0 +1,62 @@
+﻿
+@{
+    ViewBag.Title = "ManageUsers";
+    Layout = "~/Views/Shared/_Layout_Admin.cshtml";
+}
+
+<h2>Manage Users</h2>
+
+<input class="form-control" id="searchIn" type="text" placeholder="Search..">
+
+<br />
+
+<table class="table table-hover table-responsive">
+    <thead>
+        <tr>
+            <th>User's First Name</th>
+            <th>User's Last Name</th>
+            <th>Email</th>
+            <th>Edit</th>
+            <th>Delete</th>
+        </tr>
+    </thead>
+    <tbody id="st_bdy"></tbody>
+</table>
+
+<script>
+    $(document).ready(
+        $.ajax({
+            url: "GetUsers",
+            method: "GET",
+            success: function (data) {
+                temp1 = JSON.parse(data);
+
+                st = "";
+                for (i = 0; i < temp1.length; i++)
+                {
+                    st += "<tr>"
+                    st += "<td>" + temp1[i]["Fname"] + "</td><td>" + temp1[i]["Lname"] + "</td><td>" + temp1[i]["Email"] + "</td><td><a href='EditUser?id=" + temp1[i]["Id"] + "'>Edit</a></td><td><a href='DeleteUser/" + temp1[i]["Id"] + "'>Delete</a></td>"
+                    st += "</tr>"
+                }
+                $("#st_bdy").html(st);
+            },
+            error: function (err) {
+                console.error(err);
+            }
+        })
+    );
+</script>
+
+<script>
+    $(document).ready(function () {
+        $("#searchIn").on("keyup", function () {
+            var value = $(this).val().toLowerCase();
+            $("#st_bdy tr").filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+    });
+</script>
+
+
+

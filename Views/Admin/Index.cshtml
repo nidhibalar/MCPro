@@ -1,0 +1,54 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout_Admin.cshtml";
+    ViewBag.Title = "Index";
+}
+<style>
+    .card {
+        padding: 3%;
+        background: #fff;
+        border-radius: 10px;
+        display: inline-block;
+        height: 300px;
+        margin: 1rem;
+        position: relative;
+        width: 300px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+        transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+    }
+
+        .card:hover {
+            box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+        }
+
+    .content {
+        text-align: center;
+    }
+</style>
+<div class="row">
+    <div class="col-sm-6 col-md-4">
+        <div class="card" style="background:#23D9B7">
+            <div class="content">
+                <span class="glyphicon glyphicon-plus-sign" style="font-size: 1500%;color:white"></span>
+                <div style="font-size:xx-large"><a href="Admin/AddSong" style="color:white">Add Song</a></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-6 col-md-4">
+        <div class="card" style="background:#0D0D0D">
+            <div class="content">
+                <span class="glyphicon glyphicon-edit" style="font-size: 1500%;color:white"></span>
+                <div style="font-size:xx-large"><a href="Admin/ManageSongs" style="color:white">Manage Songs</a></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-6 col-md-4">
+        <div class="card" style="background:#34ace0">
+            <div class="content">
+                <span class="glyphicon glyphicon-user" style="font-size: 1500%;color:white"></span>
+                <div style="font-size:xx-large"><a href="Admin/ManageUsers" style="color:white">Manage Users</a></div>
+            </div>
+        </div>
+    </div>
+</div>
